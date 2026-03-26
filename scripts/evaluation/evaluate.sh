@@ -16,10 +16,12 @@ scripts=$base/scripts
 venvs=$base/venvs
 
 translations=$base/translations
-translations_sub=$translations/$model_name/$estimator
+translations_sub=$translations/$model_name
 
 evaluations=$base/evaluations
-evaluations_sub=$evaluations/$model_name/$estimator
+evaluations_sub=$evaluations/$model_name
+
+estimator_base="${estimator%%+*}"
 
 mkdir -p $evaluations $evaluations_sub
 
@@ -34,9 +36,9 @@ which activate
 # perhaps not necessary anymore
 # eval "$(conda shell.bash hook)"
 
-echo "Executing: source activate $venvs/$estimator"
+echo "Executing: source activate $venvs/$estimator_base"
 
-source activate $venvs/$estimator
+source activate $venvs/$estimator_base 
 
 echo "Python after activating:"
 which python

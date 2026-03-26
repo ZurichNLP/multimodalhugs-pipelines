@@ -32,18 +32,14 @@ preprocessed=$data/$estimator/preprocessed
 scripts=$base/scripts
 venvs=$base/venvs
 configs=$base/configs
-configs_with_model_name=$configs/$model_name
-configs_sub=$configs_with_model_name/$estimator
+configs_sub=$configs/$model_name
 
 models=$base/models
-models_with_model_name=$models/$model_name
-models_sub=$models_with_model_name/$estimator
+models_sub=$models/$model_name
 
 mkdir -p $configs
-mkdir -p $configs_with_model_name
 mkdir -p $configs_sub
 mkdir -p $models
-mkdir -p $models_with_model_name
 mkdir -p $models_sub
 
 # skip if checkpoint exists

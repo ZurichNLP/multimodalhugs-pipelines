@@ -13,13 +13,13 @@ model_name=$4
 
 venvs=$base/venvs
 configs=$base/configs
-configs_sub=$configs/$model_name/$estimator
+configs_sub=$configs/$model_name
 
 models=$base/models
-models_sub=$models/$model_name/$estimator
+models_sub=$models/$model_name
 
 translations=$base/translations
-translations_sub=$translations/$model_name/$estimator
+translations_sub=$translations/$model_name/
 
 mkdir -p $translations
 mkdir -p $translations_sub

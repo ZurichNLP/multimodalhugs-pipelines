@@ -10,9 +10,9 @@ scripts=$base/scripts
 dry_run="true"
 
 # set to your desired estimator
-estimator="openpifpaf" # options: mmposewholebody, mediapipe, openpifpaf
+estimator="mediapipe" # options: mmposewholebody, mediapipe, openpifpaf
 
-model_name="phoenix"
+model_name="phoenix_$estimator"
 
 # best hyperparams found so far
 
