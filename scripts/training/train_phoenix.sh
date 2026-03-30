@@ -3,6 +3,7 @@
 # calling script needs to set:
 # $base
 # $dry_run
+# $estimator
 # $model_name
 # $learning_rate
 # $gradient_accumulation_steps
@@ -15,18 +16,19 @@
 
 base=$1
 dry_run=$2
-model_name=$3
-learning_rate=$4
-gradient_accumulation_steps=$5
-warmup_steps=$6
-batch_size=$7
-label_smoothing_factor=$8
-dataloader_num_workers=$9
-fp16=${10}
-seed=${11}
+estimator=$3
+model_name=$4
+learning_rate=$5
+gradient_accumulation_steps=$6
+warmup_steps=$7
+batch_size=$8
+label_smoothing_factor=$9
+dataloader_num_workers=${10}
+fp16=${11}
+seed=${12}
 
 data=$base/data
-preprocessed=$data/preprocessed
+preprocessed=$data/$estimator/preprocessed
 scripts=$base/scripts
 venvs=$base/venvs
 configs=$base/configs
@@ -64,9 +66,9 @@ which python
 echo "activate path:"
 which activate
 
-echo "Executing: source activate $venvs/huggingface"
+echo "Executing: source activate $venvs/$estimator"
 
-source activate $venvs/huggingface
+source activate $venvs/$estimator
 
 echo "Python after activating:"
 which python
@@ -97,14 +99,30 @@ else
     fp16_arg=""
 fi
 
+if [[ "$estimator" == "mediapipe" ]]; then
+    reduce_holistic_poses_arg="--reduce-holistic-poses"
+else
+    reduce_holistic_poses_arg=""
+fi
+
+if [[ "$estimator" == "mediapipe" ]]; then
+    feat_dim=534
+elif [[ "$estimator" == "mmposewholebody" ]]; then
+
+    feat_dim=266
+else
+    echo "WARNING: Unknown estimator: $estimator. Defaulting to feat_dim=534"
+    feat_dim=534
+fi
 
 python $scripts/training/create_config.py \
-    --run-name "phoenix" \
+    --run-name "phoenix_$estimator" \
     --config-dir $configs_sub \
     --train-metadata-file $preprocessed/rwth_phoenix2014_t.train.tsv \
     --validation-metadata-file $preprocessed/rwth_phoenix2014_t.validation.tsv \
     --test-metadata-file $preprocessed/rwth_phoenix2014_t.test.tsv \
     --new-vocabulary "__dgs__" \
+    --feat-dim $feat_dim \
     --learning-rate $learning_rate \
     --gradient-accumulation-steps $gradient_accumulation_steps \
     --warmup-steps $warmup_steps \
@@ -112,7 +130,7 @@ python $scripts/training/create_config.py \
     --label-smoothing-factor $label_smoothing_factor \
     --dataloader-num-workers $dataloader_num_workers \
     --seed $seed \
-    --reduce-holistic-poses $dry_run_arg $fp16_arg
+    $reduce_holistic_poses_arg $dry_run_arg $fp16_arg
 
 # https://github.com/GerrySant/multimodalhugs/issues/50
 
@@ -120,11 +138,11 @@ export HF_HUB_DISABLE_XET=1
 
 # avoid writing to ~/.cache/huggingface
 
-export HF_HOME=$data/huggingface
+export HF_HOME=$data/$estimator/huggingface
 
 multimodalhugs-setup \
     --modality "pose2text" \
-    --config_path $configs_sub/config_phoenix.yaml \
+    --config_path $configs_sub/config-phoenix-$estimator.yaml \
     --output_dir $models_sub \
     --seed $seed
 
@@ -132,7 +150,7 @@ multimodalhugs-setup \
 
 multimodalhugs-train \
     --task "translation" \
-    --config_path $configs_sub/config_phoenix.yaml \
+    --config_path $configs_sub/config-phoenix-$estimator.yaml \
     --setup_path $models_sub/setup \
     --output_dir $models_sub \
     --seed $seed \

@@ -3,11 +3,13 @@
 # calling script needs to set:
 # $base
 # $dry_run
+# $estimator
 # $model_name
 
 base=$1
 dry_run=$2
-model_name=$3
+estimator=$3
+model_name=$4
 
 venvs=$base/venvs
 configs=$base/configs
@@ -17,7 +19,9 @@ models=$base/models
 models_sub=$models/$model_name
 
 translations=$base/translations
-translations_sub=$translations/$model_name
+translations_sub=$translations/$model_name/
+
+estimator_base="${estimator%%+*}"
 
 mkdir -p $translations
 mkdir -p $translations_sub
@@ -34,9 +38,9 @@ which python
 echo "activate path:"
 which activate
 
-echo "Executing: source activate $venvs/huggingface"
+echo "Executing: source activate $venvs/$estimator"
 
-source activate $venvs/huggingface
+source activate $venvs/$estimator
 
 echo "Python after activating:"
 which python
@@ -73,7 +77,7 @@ fi
 
 multimodalhugs-generate \
     --task "translation" \
-    --config_path $configs_sub/config_phoenix.yaml \
+    --config_path $configs_sub/config_phoenix_$estimator.yaml \
     --metric_name "sacrebleu" \
     --generate_output_dir $translations_sub \
     --setup_path $models_sub/setup \

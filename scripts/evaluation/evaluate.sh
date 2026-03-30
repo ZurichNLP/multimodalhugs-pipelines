@@ -3,11 +3,13 @@
 # calling process needs to set:
 # base
 # $dry_run
+# $estimator
 # $model_name
 
 base=$1
 dry_run=$2
-model_name=$3
+estimator=$3
+model_name=$4
 
 data=$base/data
 scripts=$base/scripts
@@ -18,6 +20,8 @@ translations_sub=$translations/$model_name
 
 evaluations=$base/evaluations
 evaluations_sub=$evaluations/$model_name
+
+estimator_base="${estimator%%+*}"
 
 mkdir -p $evaluations $evaluations_sub
 
@@ -32,18 +36,18 @@ which activate
 # perhaps not necessary anymore
 # eval "$(conda shell.bash hook)"
 
-echo "Executing: source activate $venvs/huggingface"
+echo "Executing: source activate $venvs/$estimator_base"
 
-source activate $venvs/huggingface
+source activate $venvs/$estimator_base 
 
 echo "Python after activating:"
 which python
 
 ################################
 
-# avoid downloading metric files (e.g. BLEURT model) to ~/.cache/huggingface
+# avoid downloading metric files (e.g. BLEURT model) to ~/.cache/$estimator
 
-export HF_HOME=$data/huggingface
+export HF_HOME=$data/$estimator
 
 # extract refs
 
