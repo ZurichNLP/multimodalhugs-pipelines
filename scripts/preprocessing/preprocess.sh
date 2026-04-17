@@ -25,7 +25,7 @@ mkdir -p $features $preprocessed
 
 # maybe skip
 
-if compgen -G "$preprocessed/*.train.tsv" > /dev/null; then
+if [[ -s $preprocessed/train.tsv ]]; then
     echo "Preprocessed files exist in: $preprocessed"
     echo "Skipping"
     exit 0

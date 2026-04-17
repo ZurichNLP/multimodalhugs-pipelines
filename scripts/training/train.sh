@@ -112,9 +112,9 @@ fi
 python $scripts/training/create_config.py \
     --run-name "$dataset" \
     --config-dir $configs_sub \
-    --train-metadata-file $preprocessed/rwth_phoenix2014_t.train.tsv \
-    --validation-metadata-file $preprocessed/rwth_phoenix2014_t.validation.tsv \
-    --test-metadata-file $preprocessed/rwth_phoenix2014_t.test.tsv \
+    --train-metadata-file $preprocessed/train.tsv \
+    --validation-metadata-file $preprocessed/validation.tsv \
+    --test-metadata-file $preprocessed/test.tsv \
     --new-vocabulary "__dgs__" \
     --learning-rate $learning_rate \
     --gradient-accumulation-steps $gradient_accumulation_steps \

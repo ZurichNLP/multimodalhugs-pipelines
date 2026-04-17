@@ -42,38 +42,73 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def load_pose_header(dataset_name: str) -> PoseHeader:
+def get_pose_identifier(pose_type: str):
+    """
+
+    :param pose_type: a simple name for a pose type such as "mediapipe"
+    :return: an identifier for the pose type such as "holistic" that the library sign-language-datasets uses
+    """
+    if pose_type == "mediapipe":
+        return "holistic"
+    else:
+        return pose_type
+
+
+def get_dataset_identifier(dataset: str):
+    """
+
+    :param dataset: a simple name for a dataset such as "phoenix"
+    :return: an identifier for the dataset such as "rwth_phoenix2014_t" that the library sign-language-datasets uses
+    """
+    if dataset == "phoenix":
+        return "rwth_phoenix2014_t"
+    else:
+        return dataset
+
+
+def load_pose_header(dataset_name: str,
+                     pose_type: str) -> PoseHeader:
     """
     Workaround from:
     https://github.com/sign-language-processing/datasets/issues/84
 
-    :param dataset_name:
+    :param dataset_name: A dataset name from sign_language_datasets.datasets
+    :param pose_type: For instance holistic or openpose
+
     :return:
     """
     # Dynamically import the dataset module
     dataset_module = importlib.import_module(f"sign_language_datasets.datasets.{dataset_name}.{dataset_name}")
 
+    if pose_type not in dataset_module._POSE_HEADERS:
+        raise ValueError(f"Pose type not supported: '{pose_type}'. Supported: {dataset_module._POSE_HEADERS.keys()}")
+
     # Read the pose header from the dataset's predefined file
-    with open(dataset_module._POSE_HEADERS["holistic"], "rb") as buffer:
+    with open(dataset_module._POSE_HEADERS[pose_type], "rb") as buffer:
         pose_header = PoseHeader.read(BufferReader(buffer.read()))
 
     return pose_header
 
 
-def load_dataset(data_dir: Optional[str] = None):
+def load_dataset(dataset_name: str = "rwth_phoenix2014_t",
+                 data_dir: Optional[str] = None,
+                 pose_type: str = "holistic"):
     """
+    :param dataset_name:
     :param data_dir:
+    :param pose_type:
+
     :return:
     """
 
-    config = SignDatasetConfig(name="rwth_phoenix2014_t",
+    config = SignDatasetConfig(name=dataset_name,
                                version="3.0.0",
                                include_video=False,
                                process_video=False,
                                fps=25,
-                               include_pose="holistic")
+                               include_pose=pose_type)
 
-    rwth_phoenix2014_t = tfds.load('rwth_phoenix2014_t', builder_kwargs=dict(config=config), data_dir=data_dir)
+    rwth_phoenix2014_t = tfds.load(dataset_name, builder_kwargs=dict(config=config), data_dir=data_dir)
 
     return rwth_phoenix2014_t
 
@@ -151,7 +186,7 @@ def write_examples_tsv(examples: List[Example],
     :return:
     """
 
-    filepath = os.path.join(output_dir, f"rwth_phoenix2014_t.{split_name}.tsv")
+    filepath = os.path.join(output_dir, f"{split_name}.tsv")
 
     logging.debug("Writing generated examples to: '%s'" % filepath)
 
@@ -190,9 +225,12 @@ def main():
     if args.pose_type not in SUPPORTED_POSE_TYPES:
         raise ValueError(f"Unsupported pose type: '{args.pose_type}'. Supported: {SUPPORTED_POSE_TYPES}")
 
-    phoenix_with_poses = load_dataset(data_dir=args.tfds_data_dir)
+    phoenix_with_poses = load_dataset(dataset_name=get_dataset_identifier(args.dataset),
+                                      data_dir=args.tfds_data_dir,
+                                      pose_type=get_pose_identifier(args.pose_type))
 
-    pose_header = load_pose_header("rwth_phoenix2014_t")
+    pose_header = load_pose_header(dataset_name=get_dataset_identifier(args.dataset),
+                                   pose_type=get_pose_identifier(args.pose_type))
 
     stats = {}
 
