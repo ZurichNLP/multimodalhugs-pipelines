@@ -135,7 +135,7 @@ export HF_HOME=$data/huggingface
 
 multimodalhugs-setup \
     --modality "${feature_type}2text" \
-    --config_path $configs_sub/config_$dataset.yaml \
+    --config_path $configs_sub/config.yaml \
     --output_dir $models_sub \
     --seed $seed
 
@@ -143,7 +143,7 @@ multimodalhugs-setup \
 
 multimodalhugs-train \
     --task "translation" \
-    --config_path $configs_sub/config_$dataset.yaml \
+    --config_path $configs_sub/config.yaml \
     --setup_path $models_sub/setup \
     --output_dir $models_sub \
     --seed $seed \

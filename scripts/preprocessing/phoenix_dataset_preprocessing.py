@@ -20,9 +20,15 @@ from typing import Iterator, Optional, Dict, List
 
 
 # Parse command-line arguments
+SUPPORTED_DATASETS = ["phoenix"]
+SUPPORTED_FEATURE_TYPES = ["pose"]
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process and transform a TSV file.")
-    parser.add_argument("--pose-dir", type=str, help="Where to save poses.")
+    parser.add_argument("--dataset", type=str, required=True, help="Dataset name.")
+    parser.add_argument("--feature-type", type=str, required=True, help="Feature type (e.g. 'pose').")
+    parser.add_argument("--feature-dir", type=str, help="Where to save features.")
     parser.add_argument("--output-dir", type=str, help="Path to the output TSV files.")
     parser.add_argument("--encoder-prompt", type=str, default="__dgs__", help="encoder prompt string.")
     parser.add_argument("--decoder-prompt", type=str, default="__de__", help="decoder prompt string.")
@@ -173,6 +179,12 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.debug(args)
 
+    if args.dataset not in SUPPORTED_DATASETS:
+        raise ValueError(f"Unsupported dataset: '{args.dataset}'. Supported: {SUPPORTED_DATASETS}")
+
+    if args.feature_type not in SUPPORTED_FEATURE_TYPES:
+        raise ValueError(f"Unsupported feature type: '{args.feature_type}'. Supported: {SUPPORTED_FEATURE_TYPES}")
+
     phoenix_with_poses = load_dataset(data_dir=args.tfds_data_dir)
 
     pose_header = load_pose_header("rwth_phoenix2014_t")
@@ -183,7 +195,7 @@ def main():
         examples = list(generate_examples(dataset=phoenix_with_poses,
                                           split_name=split_name,
                                           pose_header=pose_header,
-                                          pose_dir=args.pose_dir,
+                                          pose_dir=args.feature_dir,
                                           dry_run=args.dry_run))
 
         stats[split_name] = len(examples)

@@ -165,7 +165,7 @@ def main():
 
     filled_template = fill_template(args)
 
-    config_path = f"{args.config_dir}/config_{args.run_name}.yaml"
+    config_path = f"{args.config_dir}/config.yaml"
 
     logging.debug(f"Writing config to: '{config_path}'")
 

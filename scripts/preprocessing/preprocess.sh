@@ -17,17 +17,16 @@ scripts=$base/scripts
 data=$base/data
 venvs=$base/venvs
 
-poses=$data/$dataset/$feature_type/$pose_type
+features=$data/$dataset/$feature_type/$pose_type
 preprocessed=$data/$dataset/preprocessed/$feature_type/$pose_type
 
 mkdir -p $data
-mkdir -p $poses $preprocessed
+mkdir -p $features $preprocessed
 
 # maybe skip
 
-if [[ -s $preprocessed/rwth_phoenix2014_t.train.tsv ]]; then
-    echo "Preprocessed file exists: $preprocessed/rwth_phoenix2014_t.train.tsv"
-    echo "Dataset: $dataset, feature type: $feature_type, pose type: $pose_type"
+if compgen -G "$preprocessed/*.train.tsv" > /dev/null; then
+    echo "Preprocessed files exist in: $preprocessed"
     echo "Skipping"
     exit 0
 else
@@ -62,14 +61,16 @@ else
 fi
 
 python $scripts/preprocessing/phoenix_dataset_preprocessing.py \
-    --pose-dir $poses \
+    --dataset $dataset \
+    --feature-type $feature_type \
+    --feature-dir $features \
     --output-dir $preprocessed \
     --tfds-data-dir $data/tensorflow_datasets $dry_run_arg
 
 # sizes
 echo "Sizes of preprocessed TSV files:"
 
-wc -l $preprocessed/*
+wc -l $preprocessed/*.tsv
 
 echo "time taken:"
 echo "$SECONDS seconds"
