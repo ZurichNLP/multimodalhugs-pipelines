@@ -22,12 +22,14 @@ from typing import Iterator, Optional, Dict, List
 # Parse command-line arguments
 SUPPORTED_DATASETS = ["phoenix"]
 SUPPORTED_FEATURE_TYPES = ["pose"]
+SUPPORTED_POSE_TYPES = ["mediapipe"]
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process and transform a TSV file.")
     parser.add_argument("--dataset", type=str, required=True, help="Dataset name.")
     parser.add_argument("--feature-type", type=str, required=True, help="Feature type (e.g. 'pose').")
+    parser.add_argument("--pose-type", type=str, required=True, help="Pose type (e.g. 'mediapipe').")
     parser.add_argument("--feature-dir", type=str, help="Where to save features.")
     parser.add_argument("--output-dir", type=str, help="Path to the output TSV files.")
     parser.add_argument("--encoder-prompt", type=str, default="__dgs__", help="encoder prompt string.")
@@ -82,13 +84,13 @@ Example = Dict[str, str]
 def generate_examples(dataset: tf.data.Dataset,
                       split_name: str,
                       pose_header: PoseHeader,
-                      pose_dir: str,
+                      feature_dir: str,
                       dry_run: bool = False) -> Iterator[Example]:
     """
     :param dataset:
     :param split_name: "train", "validation" or "test"
     :param pose_header:
-    :param pose_dir:
+    :param feature_dir:
     :param dry_run:
     :return:
     """
@@ -116,7 +118,7 @@ def generate_examples(dataset: tf.data.Dataset,
         # Construct Pose object and write to file
         pose = Pose(pose_header, pose_body)
 
-        pose_filepath = os.path.join(pose_dir, f"{datum_id}.pose")
+        pose_filepath = os.path.join(feature_dir, f"{datum_id}.pose")
 
         if dry_run:
             logging.debug(f"Writing pose to: '{pose_filepath}'")
@@ -185,6 +187,9 @@ def main():
     if args.feature_type not in SUPPORTED_FEATURE_TYPES:
         raise ValueError(f"Unsupported feature type: '{args.feature_type}'. Supported: {SUPPORTED_FEATURE_TYPES}")
 
+    if args.pose_type not in SUPPORTED_POSE_TYPES:
+        raise ValueError(f"Unsupported pose type: '{args.pose_type}'. Supported: {SUPPORTED_POSE_TYPES}")
+
     phoenix_with_poses = load_dataset(data_dir=args.tfds_data_dir)
 
     pose_header = load_pose_header("rwth_phoenix2014_t")
@@ -195,7 +200,7 @@ def main():
         examples = list(generate_examples(dataset=phoenix_with_poses,
                                           split_name=split_name,
                                           pose_header=pose_header,
-                                          pose_dir=args.feature_dir,
+                                          feature_dir=args.feature_dir,
                                           dry_run=args.dry_run))
 
         stats[split_name] = len(examples)

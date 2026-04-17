@@ -63,6 +63,7 @@ fi
 python $scripts/preprocessing/phoenix_dataset_preprocessing.py \
     --dataset $dataset \
     --feature-type $feature_type \
+    --pose-type $pose_type \
     --feature-dir $features \
     --output-dir $preprocessed \
     --tfds-data-dir $data/tensorflow_datasets $dry_run_arg
