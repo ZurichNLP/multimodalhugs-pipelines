@@ -30,8 +30,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install "mediapipe<0.10.30" pose-format sacrebleu opencv-python-headless
           pip install git+https://github.com/GerrySant/multimodalhugs.git@5201c80f27aa70c460e8297a799dc5daccbd1b3b
+          pip install "mediapipe<0.10.30" pose-format sacrebleu
 
       - name: Run pipeline test
         run: bash tests/test_pipeline.sh
