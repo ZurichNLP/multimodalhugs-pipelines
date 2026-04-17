@@ -3,16 +3,22 @@
 # calling script needs to set:
 # $base
 # $dry_run
+# $dataset
+# $feature_type
+# $pose_type
 
 base=$1
 dry_run=$2
+dataset=$3
+feature_type=$4
+pose_type=$5
 
 scripts=$base/scripts
 data=$base/data
 venvs=$base/venvs
 
-poses=$data/poses
-preprocessed=$data/preprocessed
+poses=$data/$dataset/$feature_type/$pose_type
+preprocessed=$data/$dataset/preprocessed/$feature_type/$pose_type
 
 mkdir -p $data
 mkdir -p $poses $preprocessed
@@ -21,6 +27,7 @@ mkdir -p $poses $preprocessed
 
 if [[ -s $preprocessed/rwth_phoenix2014_t.train.tsv ]]; then
     echo "Preprocessed file exists: $preprocessed/rwth_phoenix2014_t.train.tsv"
+    echo "Dataset: $dataset, feature type: $feature_type, pose type: $pose_type"
     echo "Skipping"
     exit 0
 else

@@ -4,6 +4,9 @@
 # $base
 # $dry_run
 # $model_name
+# $dataset
+# $feature_type
+# $pose_type
 # $learning_rate
 # $gradient_accumulation_steps
 # $warmup_steps
@@ -16,17 +19,20 @@
 base=$1
 dry_run=$2
 model_name=$3
-learning_rate=$4
-gradient_accumulation_steps=$5
-warmup_steps=$6
-batch_size=$7
-label_smoothing_factor=$8
-dataloader_num_workers=$9
-fp16=${10}
-seed=${11}
+dataset=$4
+feature_type=$5
+pose_type=$6
+learning_rate=$7
+gradient_accumulation_steps=$8
+warmup_steps=$9
+batch_size=${10}
+label_smoothing_factor=${11}
+dataloader_num_workers=${12}
+fp16=${13}
+seed=${14}
 
 data=$base/data
-preprocessed=$data/preprocessed
+preprocessed=$data/$dataset/preprocessed/$feature_type/$pose_type
 scripts=$base/scripts
 venvs=$base/venvs
 configs=$base/configs
@@ -97,9 +103,14 @@ else
     fp16_arg=""
 fi
 
+if [[ $pose_type == "mediapipe" ]]; then
+    reduce_holistic_poses_arg="--reduce-holistic-poses"
+else
+    reduce_holistic_poses_arg=""
+fi
 
 python $scripts/training/create_config.py \
-    --run-name "phoenix" \
+    --run-name "$dataset" \
     --config-dir $configs_sub \
     --train-metadata-file $preprocessed/rwth_phoenix2014_t.train.tsv \
     --validation-metadata-file $preprocessed/rwth_phoenix2014_t.validation.tsv \
@@ -112,7 +123,7 @@ python $scripts/training/create_config.py \
     --label-smoothing-factor $label_smoothing_factor \
     --dataloader-num-workers $dataloader_num_workers \
     --seed $seed \
-    --reduce-holistic-poses $dry_run_arg $fp16_arg
+    $reduce_holistic_poses_arg $dry_run_arg $fp16_arg
 
 # https://github.com/GerrySant/multimodalhugs/issues/50
 
@@ -123,8 +134,8 @@ export HF_HUB_DISABLE_XET=1
 export HF_HOME=$data/huggingface
 
 multimodalhugs-setup \
-    --modality "pose2text" \
-    --config_path $configs_sub/config_phoenix.yaml \
+    --modality "${feature_type}2text" \
+    --config_path $configs_sub/config_$dataset.yaml \
     --output_dir $models_sub \
     --seed $seed
 
@@ -132,7 +143,7 @@ multimodalhugs-setup \
 
 multimodalhugs-train \
     --task "translation" \
-    --config_path $configs_sub/config_phoenix.yaml \
+    --config_path $configs_sub/config_$dataset.yaml \
     --setup_path $models_sub/setup \
     --output_dir $models_sub \
     --seed $seed \
