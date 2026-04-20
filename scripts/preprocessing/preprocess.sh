@@ -62,13 +62,24 @@ else
     dry_run_arg=""
 fi
 
-python $scripts/preprocessing/preprocess.py \
+max_attempts=5
+attempt=0
+until python $scripts/preprocessing/preprocess.py \
     --dataset $dataset \
     --feature-type $feature_type \
     --pose-type $pose_type \
     --feature-dir $features \
     --output-dir $preprocessed \
     --tfds-data-dir $data/tensorflow_datasets $dry_run_arg
+do
+    attempt=$((attempt + 1))
+    if [[ $attempt -ge $max_attempts ]]; then
+        echo "Preprocessing failed after $max_attempts attempts, giving up"
+        exit 1
+    fi
+    echo "Attempt $attempt failed, retrying in 60 seconds..."
+    sleep 60
+done
 
 # sizes
 echo "Sizes of preprocessed TSV files:"
