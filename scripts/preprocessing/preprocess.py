@@ -172,25 +172,73 @@ def generate_examples(dataset: Any,
         yield example
 
 
+def _fake_holistic_pose(num_frames: int, num_people: int = 1, fps: float = 25.0) -> Pose:
+    """
+    Build a fake mediapipe holistic pose without importing mediapipe.
+    Component names and point lists are the standard MediaPipe holistic definitions.
+    """
+    import numpy as np
+    import numpy.ma as ma
+    from pose_format.pose_header import PoseHeaderComponent, PoseHeaderDimensions
+
+    body_points = [
+        "NOSE", "LEFT_EYE_INNER", "LEFT_EYE", "LEFT_EYE_OUTER",
+        "RIGHT_EYE_INNER", "RIGHT_EYE", "RIGHT_EYE_OUTER",
+        "LEFT_EAR", "RIGHT_EAR", "MOUTH_LEFT", "MOUTH_RIGHT",
+        "LEFT_SHOULDER", "RIGHT_SHOULDER", "LEFT_ELBOW", "RIGHT_ELBOW",
+        "LEFT_WRIST", "RIGHT_WRIST", "LEFT_PINKY", "RIGHT_PINKY",
+        "LEFT_INDEX", "RIGHT_INDEX", "LEFT_THUMB", "RIGHT_THUMB",
+        "LEFT_HIP", "RIGHT_HIP", "LEFT_KNEE", "RIGHT_KNEE",
+        "LEFT_ANKLE", "RIGHT_ANKLE", "LEFT_HEEL", "RIGHT_HEEL",
+        "LEFT_FOOT_INDEX", "RIGHT_FOOT_INDEX",
+    ]
+    hand_points = [
+        "WRIST", "THUMB_CMC", "THUMB_MCP", "THUMB_IP", "THUMB_TIP",
+        "INDEX_FINGER_MCP", "INDEX_FINGER_PIP", "INDEX_FINGER_DIP", "INDEX_FINGER_TIP",
+        "MIDDLE_FINGER_MCP", "MIDDLE_FINGER_PIP", "MIDDLE_FINGER_DIP", "MIDDLE_FINGER_TIP",
+        "RING_FINGER_MCP", "RING_FINGER_PIP", "RING_FINGER_DIP", "RING_FINGER_TIP",
+        "PINKY_MCP", "PINKY_PIP", "PINKY_DIP", "PINKY_TIP",
+    ]
+    face_points = [str(i) for i in range(468)]
+
+    pf = "XYZC"
+    components = [
+        PoseHeaderComponent(name="POSE_LANDMARKS", points=body_points, limbs=[], colors=[(255, 0, 0)], point_format=pf),
+        PoseHeaderComponent(name="FACE_LANDMARKS", points=face_points, limbs=[], colors=[(128, 0, 0)], point_format=pf),
+        PoseHeaderComponent(name="LEFT_HAND_LANDMARKS", points=hand_points, limbs=[], colors=[(0, 255, 0)], point_format=pf),
+        PoseHeaderComponent(name="RIGHT_HAND_LANDMARKS", points=hand_points, limbs=[], colors=[(0, 0, 255)], point_format=pf),
+        PoseHeaderComponent(name="POSE_WORLD_LANDMARKS", points=body_points, limbs=[], colors=[(255, 0, 0)], point_format=pf),
+    ]
+
+    dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
+    header = PoseHeader(version=0.2, dimensions=dimensions, components=components)
+
+    total_points = header.total_points()
+    num_dims = header.num_dims()
+    data = np.random.randn(num_frames, num_people, total_points, num_dims).astype(np.float32)
+    confidence = np.ones((num_frames, num_people, total_points), dtype=np.float32)
+
+    body = NumPyPoseBody(fps=fps, data=ma.masked_array(data), confidence=confidence)
+    return Pose(header, body)
+
+
 def generate_fake_examples(feature_dir: str,
                             num_examples: int = 5,
                             num_frames: int = 30) -> List[Example]:
     """
     Generate fake holistic pose examples without downloading any real dataset.
-    Useful for CI and smoke testing.
+    Does not require mediapipe. Useful for CI and smoke testing.
 
     :param feature_dir:
     :param num_examples:
     :param num_frames:
     :return:
     """
-    from pose_format.utils.generic import fake_holistic_pose
-
     examples = []
 
     for i in range(num_examples):
         datum_id = f"fake_{i:04d}"
-        pose = fake_holistic_pose(num_frames=num_frames)
+        pose = _fake_holistic_pose(num_frames=num_frames)
 
         pose_filepath = os.path.join(feature_dir, f"{datum_id}.pose")
 
