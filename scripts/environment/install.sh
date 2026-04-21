@@ -57,5 +57,9 @@ EOF
 
 pip install importlib_resources
 
+# protobuf 4.x dropped FieldDescriptor.label from the C extension, breaking TFDS
+
+pip install "protobuf<4.0.0"
+
 pip uninstall -y opencv-python opencv-python-headless
 pip install "opencv-python-headless==${OPENCV_VERSION}"
