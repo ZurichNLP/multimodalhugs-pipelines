@@ -216,7 +216,11 @@ def download_and_extract_poses(pose_type: str, feature_dir: str) -> None:
 
     if not os.path.exists(archive_path):
         logging.info(f"Downloading {url} -> {archive_path}")
-        urllib.request.urlretrieve(url, tmp_path)
+        request = urllib.request.Request(
+            url, headers={"User-Agent": "Mozilla/5.0"}
+        )
+        with urllib.request.urlopen(request) as response, open(tmp_path, "wb") as f:
+            f.write(response.read())
         os.rename(tmp_path, archive_path)
     else:
         logging.info(f"Archive already exists, skipping download: {archive_path}")
