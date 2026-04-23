@@ -17,6 +17,9 @@
 : "${fp16:="true"}"
 : "${seed:=42}"
 : "${gpu_type:="v100"}"
+: "${venv:="huggingface"}"
+
+export venv
 
 ################################
 
@@ -52,7 +55,7 @@ log_vars() {
 }
 
 log_vars base dry_run dataset feature_type pose_type model_name learning_rate gradient_accumulation_steps \
-    warmup_steps batch_size label_smoothing_factor dataloader_num_workers fp16 seed gpu_type
+    warmup_steps batch_size label_smoothing_factor dataloader_num_workers fp16 seed gpu_type venv
 
 echo "##############################################" | tee -a $logs_sub/MAIN
 

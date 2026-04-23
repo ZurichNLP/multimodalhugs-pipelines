@@ -72,9 +72,9 @@ which python
 echo "activate path:"
 which activate
 
-echo "Executing: source activate $venvs/huggingface"
+echo "Executing: source activate $venvs/${venv:-huggingface}"
 
-source activate $venvs/huggingface
+source activate $venvs/${venv:-huggingface}
 
 echo "Python after activating:"
 which python

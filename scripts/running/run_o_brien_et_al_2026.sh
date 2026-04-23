@@ -9,6 +9,8 @@ scripts=$base/scripts
 
 dry_run="false"
 
+venv="o_brien_et_al_2026"
+
 dataset="phoenix"
 feature_type="pose"
 
