@@ -24,10 +24,12 @@ fi
 source activate $venvs/$venv_name
 
 # install multimodalhugs, pinned to exact commit for reproducibility
+# Using bricksdont fork, branch cherry-pick-catherine-one-person-per-frame,
+# which adds support for multi-person pose files (e.g. openpose sometimes detects >1 person).
 
-git clone https://github.com/GerrySant/multimodalhugs.git $tools/$venv_name/multimodalhugs
+git clone https://github.com/bricksdont/multimodalhugs.git $tools/$venv_name/multimodalhugs
 
-(cd $tools/$venv_name/multimodalhugs && git checkout "5201c80f27aa70c460e8297a799dc5daccbd1b3b")
+(cd $tools/$venv_name/multimodalhugs && git checkout "881f4b7121577f9e4a8ea276c30f9499d81f111b")
 
 (cd $tools/$venv_name/multimodalhugs && pip install .)
 
