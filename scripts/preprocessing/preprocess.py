@@ -53,7 +53,9 @@ POSE_DOWNLOAD_URLS = {
 
 # Expected feat_dim per pose type for sanity checking.
 # mediapipe: 534 after reduce_holistic_poses transformation at runtime.
-# Others: total_points * dims_per_keypoint as read from .pose file header.
+# Others: total_points * dims_per_keypoint as read from the body data array.
+# Note: header format strings (e.g. XYC) may not match the actual stored dims;
+# alphapose_136 declares XYC but only stores XY in the body.
 # See https://github.com/ZurichNLP/video-to-pose for keypoint counts.
 EXPECTED_FEAT_DIMS = {
     "mediapipe": 534,  # after reduce_holistic_poses
@@ -341,13 +343,16 @@ def download_and_extract_poses(pose_type: str, feature_dir: str) -> None:
 
 
 def compute_feat_dim_from_file(pose_filepath: str) -> int:
-    """Compute feat_dim as sum of (n_points * n_dims) across all pose header components."""
+    """Compute feat_dim from the actual body data shape (n_points * n_dims).
+
+    Reads from body.data.shape rather than the header format string because some
+    pose types (e.g. alphapose_136) declare XYC in the header but only store XY
+    in the data array.
+    """
     with open(pose_filepath, "rb") as f:
         pose = Pose.read(f.read())
-    total = 0
-    for component in pose.header.components:
-        total += len(component.points) * len(component.format)
-    return total
+    _, _, n_points, n_dims = pose.body.data.shape
+    return n_points * n_dims
 
 
 def get_feat_dim(pose_type: str, feature_dir: str) -> int:
