@@ -11,7 +11,7 @@ tools=$base/tools
 
 venv_name="default"
 
-mkdir -p $venvs $tools
+mkdir -p $venvs $tools/$venv_name
 
 # create venv only if it does not yet exist
 
@@ -25,9 +25,9 @@ source activate $venvs/$venv_name
 
 # install multimodalhugs (latest)
 
-git clone https://github.com/GerrySant/multimodalhugs.git $tools/multimodalhugs
+git clone https://github.com/GerrySant/multimodalhugs.git $tools/$venv_name/multimodalhugs
 
-(cd $tools/multimodalhugs && pip install .)
+(cd $tools/$venv_name/multimodalhugs && pip install .)
 
 # install SL datasets
 
@@ -36,8 +36,8 @@ pip install git+https://github.com/sign-language-processing/datasets.git
 # pose-format fork with support for additional pose types (alphapose, openpose, smplest_x, etc.)
 # Cloned without submodules to avoid SSH auth failure on the pose-pipelines submodule.
 
-git clone --no-recurse-submodules -b multiple_support https://github.com/GerrySant/pose.git $tools/pose-format
-pip install $tools/pose-format/src/python
+git clone --no-recurse-submodules -b multiple_support https://github.com/GerrySant/pose.git $tools/$venv_name/pose-format
+pip install $tools/$venv_name/pose-format/src/python
 
 # TF keras, because keras 3 is not supported in Transformers
 

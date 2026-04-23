@@ -11,7 +11,7 @@ tools=$base/tools
 
 venv_name="o_brien_et_al_2026"
 
-mkdir -p $venvs $tools
+mkdir -p $venvs $tools/$venv_name
 
 # create venv only if it does not yet exist
 
@@ -25,11 +25,11 @@ source activate $venvs/$venv_name
 
 # install multimodalhugs, pinned to exact commit for reproducibility
 
-git clone https://github.com/GerrySant/multimodalhugs.git $tools/multimodalhugs-$venv_name
+git clone https://github.com/GerrySant/multimodalhugs.git $tools/$venv_name/multimodalhugs
 
-(cd $tools/multimodalhugs-$venv_name && git checkout "5201c80f27aa70c460e8297a799dc5daccbd1b3b")
+(cd $tools/$venv_name/multimodalhugs && git checkout "5201c80f27aa70c460e8297a799dc5daccbd1b3b")
 
-(cd $tools/multimodalhugs-$venv_name && pip install .)
+(cd $tools/$venv_name/multimodalhugs && pip install .)
 
 # install SL datasets
 
@@ -38,11 +38,11 @@ pip install git+https://github.com/sign-language-processing/datasets.git
 # pose-format fork, pinned to exact commit for reproducibility
 # Cloned without submodules to avoid SSH auth failure on the pose-pipelines submodule.
 
-git clone --no-recurse-submodules https://github.com/GerrySant/pose.git $tools/pose-format-$venv_name
+git clone --no-recurse-submodules https://github.com/GerrySant/pose.git $tools/$venv_name/pose-format
 
-(cd $tools/pose-format-$venv_name && git checkout "c38880312aaefdf07298dce1548ad619734420ba")
+(cd $tools/$venv_name/pose-format && git checkout "c38880312aaefdf07298dce1548ad619734420ba")
 
-pip install $tools/pose-format-$venv_name/src/python
+pip install $tools/$venv_name/pose-format/src/python
 
 # TF keras, because keras 3 is not supported in Transformers
 
