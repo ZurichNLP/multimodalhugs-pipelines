@@ -9,11 +9,7 @@ Download the code:
     git clone https://github.com/bricksdont/multimodalhugs-pipelines
     cd multimodalhugs-pipelines
 
-Create a venv:
-
-    ./scripts/environment/create_env.sh
-
-Then install required software:
+Create a venv and install required software:
 
     ./scripts/environment/install.sh
 

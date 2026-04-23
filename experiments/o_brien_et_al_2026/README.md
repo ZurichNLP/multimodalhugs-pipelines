@@ -22,6 +22,14 @@ See [`POSE_DOWNLOAD_URLS`](../../scripts/preprocessing/preprocess.py) for the ex
 
 ## How to run
 
+First create and populate the experiment venv (only needed once):
+
+```bash
+bash experiments/o_brien_et_al_2026/install.sh
+```
+
+Then submit the SLURM jobs:
+
 ```bash
 bash scripts/running/run_o_brien_et_al_2026.sh
 ```
