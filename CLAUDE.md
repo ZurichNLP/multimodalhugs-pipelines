@@ -56,7 +56,7 @@ Each step script (`preprocess.sh`, `train.sh`, `translate.sh`) follows the same 
 - `set -euo pipefail` at the top — required so SLURM `afterok` dependencies fail correctly when a step errors
 - Positional args only (no named flags), in a fixed documented order
 - Skip logic at the top: if output already exists, exits 0 immediately
-- Activates the venv via `source activate $venvs/${venv:-huggingface}`
+- Activates the venv via `source activate $venvs/${venv:-default}`
 - Times execution with `$SECONDS`
 
 ## Pose features
@@ -81,7 +81,7 @@ Each step script (`preprocess.sh`, `train.sh`, `translate.sh`) follows the same 
 - mediapipe is **not** installed; fake pose generation in `preprocess.py` hardcodes MediaPipe holistic component definitions directly to avoid the mediapipe/protobuf/tensorflow version conflict
 - TF/TFDS are not used for Phoenix text labels; labels are downloaded directly from `ANNOTATIONS_URL` in `preprocess.py` as a plain 800 KB tar.gz, parsed with the `csv` module — no protobuf pin needed
 - `pose-format` is installed from the `GerrySant/pose` fork (`multiple_support` branch) to support non-mediapipe pose types; the default install tracks the branch tip, experiment installs pin to an exact commit
-- Each experiment that requires a reproducible environment has its own `install.sh` under `experiments/<name>/` which creates `venvs/<name>/`; `run_generic.sh` picks up the venv via the `$venv` variable (default: `huggingface`)
+- Each experiment that requires a reproducible environment has its own `install.sh` under `experiments/<name>/` which creates `venvs/<name>/` and clones repos into `tools/<name>/`; `run_generic.sh` picks up the venv via the `$venv` variable (default: `default`)
 
 ## CI
 
