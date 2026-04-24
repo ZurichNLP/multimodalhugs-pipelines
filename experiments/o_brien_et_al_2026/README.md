@@ -14,7 +14,7 @@ Eight pose estimators are evaluated:
 | `openpifpaf` | 133 | XY | 266 |
 | `openpose` | 137 | XY | 274 |
 | `sapiens` | — | — | 620 |
-| `sdpose` | 133 | XYC | 399 |
+| `sdpose` | 133 | XY | 266 |
 | `smplest_x` | 139 | XY | 278 |
 
 Pre-estimated poses are downloaded automatically from Cloudflare during preprocessing.

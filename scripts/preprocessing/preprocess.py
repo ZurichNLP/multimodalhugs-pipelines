@@ -64,7 +64,7 @@ EXPECTED_FEAT_DIMS = {
     "alphapose_136": 272,  # 136 * 2 (XY, 2D)
     "mmposewholebody": 266,  # 133 * 2 (XY)
     "openpifpaf": 266,  # 133 * 2 (XY)
-    "sdpose": 399,  # 133 * 3 (XYC)
+    "sdpose": 266,  # 133 * 2 (XY)
     "openpose": 274,  # 137 * 2 (XY)
     "smplest_x": 278,  # 139 * 2 (XY)
     "sapiens": 620,
