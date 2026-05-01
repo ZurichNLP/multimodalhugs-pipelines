@@ -24,6 +24,12 @@ To repeat the pose estimation step, or to apply a different dataset, see the com
 
 ## How to run
 
+For maximum reproducibility, check out the tagged version of this codebase before running:
+
+```bash
+git checkout o_brien_et_al_2026
+```
+
 First create and populate the experiment venv (only needed once):
 
 ```bash
