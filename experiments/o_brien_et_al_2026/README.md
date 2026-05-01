@@ -17,8 +17,10 @@ Eight pose estimators are evaluated:
 | `sdpose` | 133                   | XY       | 266 |
 | `smplest_x` | 139                   | XY       | 278 |
 
-Pre-estimated poses are downloaded automatically from Cloudflare during preprocessing.
+Pre-estimated poses are downloaded automatically from a Cloudflare R2 bucket during preprocessing — this code does **not** run pose estimation itself.
 See [`POSE_DOWNLOAD_URLS`](../../scripts/preprocessing/preprocess.py) for the exact URLs.
+
+To repeat the pose estimation step, or to apply a different dataset, see the companion repository: [ZurichNLP/video-to-pose](https://github.com/ZurichNLP/video-to-pose).
 
 ## How to run
 
@@ -47,6 +49,8 @@ Best hyperparameters from the hyperparameter search experiment are used:
 
 ## Results
 
+These scores are a reproduction run by the original authors and may differ slightly from the numbers reported in the paper due to software and environment differences.
+
 | Pose type | Seed | BLEU | BLEURT |
 |---|---|---|---|
 | `alphapose_136` | 375678 | 11.275 | — |
@@ -73,3 +77,17 @@ Best hyperparameters from the hyperparameter search experiment are used:
 | `smplest_x` | 375678 | 9.763 | — |
 | `smplest_x` | 534 | 9.894 | — |
 | `smplest_x` | 42 | 10.058 | — |
+
+## Citation
+
+```bibtex
+@misc{obrien2026comparing,
+  title        = {Comparing Pose Estimators for Sign Language Translation},
+  author       = {O'Brien, Catherine and M\"{u}ller, Mathias and Ebling, Sarah},
+  year         = {2026},
+  eprint       = {2604.24609},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  url          = {https://arxiv.org/abs/2604.24609},
+}
+```
