@@ -83,7 +83,7 @@ These scores are a reproduction run by the original authors and may differ sligh
 ```bibtex
 @misc{obrien2026comparing,
   title        = {Comparing Pose Estimators for Sign Language Translation},
-  author       = {O'Brien, Catherine and M\"{u}ller, Mathias and Ebling, Sarah},
+  author       = {O'Brien, Catherine and Sant, Gerard and M\"{u}ller, Mathias and Ebling, Sarah},
   year         = {2026},
   eprint       = {2604.24609},
   archivePrefix= {arXiv},
