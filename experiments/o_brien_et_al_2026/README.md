@@ -53,30 +53,30 @@ These scores are a reproduction run by the original authors and may differ sligh
 
 | Pose type | Seed | BLEU | BLEURT |
 |---|---|---|---|
-| `alphapose_136` | 375678 | 11.275 | — |
-| `alphapose_136` | 534 | 11.493 | — |
-| `alphapose_136` | 42 | 10.725 | — |
-| `mediapipe` | 375678 | 10.337 | — |
-| `mediapipe` | 534 | 10.083 | — |
-| `mediapipe` | 42 | 9.765 | — |
-| `mmposewholebody` | 375678 | 10.184 | — |
-| `mmposewholebody` | 534 | 10.510 | — |
-| `mmposewholebody` | 42 | 10.881 | — |
-| `openpifpaf` | 375678 | 9.598 | — |
-| `openpifpaf` | 534 | 9.611 | — |
-| `openpifpaf` | 42 | 9.711 | — |
-| `openpose` | 375678 | 10.915 | — |
-| `openpose` | 534 | 10.301 | — |
-| `openpose` | 42 | 10.601 | — |
-| `sapiens` | 375678 | 11.799 | — |
-| `sapiens` | 534 | 11.440 | — |
-| `sapiens` | 42 | 11.124 | — |
-| `sdpose` | 375678 | 11.949 | — |
-| `sdpose` | 534 | 11.095 | — |
-| `sdpose` | 42 | 12.000 | — |
-| `smplest_x` | 375678 | 9.763 | — |
-| `smplest_x` | 534 | 9.894 | — |
-| `smplest_x` | 42 | 10.058 | — |
+| `alphapose_136` | 375678 | 11.275 | 0.364 |
+| `alphapose_136` | 534 | 11.493 | 0.368 |
+| `alphapose_136` | 42 | 10.725 | 0.344 |
+| `mediapipe` | 375678 | 10.337 | 0.344 |
+| `mediapipe` | 534 | 10.083 | 0.342 |
+| `mediapipe` | 42 | 9.765 | 0.347 |
+| `mmposewholebody` | 375678 | 10.184 | 0.346 |
+| `mmposewholebody` | 534 | 10.510 | 0.356 |
+| `mmposewholebody` | 42 | 10.881 | 0.358 |
+| `openpifpaf` | 375678 | 9.598 | 0.330 |
+| `openpifpaf` | 534 | 9.611 | 0.339 |
+| `openpifpaf` | 42 | 9.711 | 0.339 |
+| `openpose` | 375678 | 10.915 | 0.351 |
+| `openpose` | 534 | 10.301 | 0.354 |
+| `openpose` | 42 | 10.601 | 0.356 |
+| `sapiens` | 375678 | 11.799 | 0.381 |
+| `sapiens` | 534 | 11.440 | 0.369 |
+| `sapiens` | 42 | 11.124 | 0.371 |
+| `sdpose` | 375678 | 11.949 | 0.371 |
+| `sdpose` | 534 | 11.095 | 0.357 |
+| `sdpose` | 42 | 12.000 | 0.373 |
+| `smplest_x` | 375678 | 9.763 | 0.339 |
+| `smplest_x` | 534 | 9.894 | 0.333 |
+| `smplest_x` | 42 | 10.058 | 0.335 |
 
 ## Citation
 
